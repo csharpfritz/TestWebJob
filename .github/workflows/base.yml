@@ -4,8 +4,9 @@ on:
     branches:
     - main
 env:
+  WEBJOB_NAME: TestFreeAppFritz
   AZURE_WEBAPP_NAME: TestFreeAppFritz
-  AZURE_WEBAPP_PACKAGE_PATH: First\publish
+  AZURE_WEBJOB_PACKAGE_PATH: ./publish/App_Data/Jobs/Continuous/webjob
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 6.0.x
   WORKING_DIRECTORY: First
@@ -32,10 +33,10 @@ jobs:
     - name: Test
       run: dotnet test
     - name: Publish
-      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} -r win-x86 --self-contained true
+      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --output ${{ env.AZURE_WEBJOB_PACKAGE_PATH }} -r win-x86 --self-contained true
     - name: Deploy to Azure Web App
       uses: Azure/webapps-deploy@v2
       with:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.TESTFREEAPPFRITZ_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        package: ./publish
